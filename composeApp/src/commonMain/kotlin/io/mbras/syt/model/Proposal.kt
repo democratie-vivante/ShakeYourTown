@@ -1,5 +1,7 @@
 package io.mbras.syt.model
 
+import kotlinx.datetime.LocalDateTime
+
 data class Proposal(
     val id: String,                 // Unique identifier (UUID)
     val title: String,              // Short title of the idea
@@ -7,7 +9,7 @@ data class Proposal(
     val category: ProposalCategory, // Enum: e.g., ENERGY, WASTE, TRANSPORT, etc.
     val authorId: String?,          // Optional: user who submitted (null if anonymous)
     val imageUrl: String?,          // Optional: link to an image or attachment
-    val createdAt: Long,            // Timestamp (epoch millis)
+    val createdAt: LocalDateTime,   // Timestamp (epoch millis)
     val status: ProposalStatus      // Enum: e.g., OPEN, APPROVED, REJECTED, IN_PROGRESS
 )
 
