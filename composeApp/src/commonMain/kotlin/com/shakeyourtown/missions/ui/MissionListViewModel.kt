@@ -3,9 +3,15 @@ package com.shakeyourtown.missions.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class MissionListViewModel(
     private val apiBaseUrl: String = "http://localhost:8080"
@@ -18,7 +24,13 @@ class MissionListViewModel(
     private val scope = CoroutineScope(Dispatchers.Main)
 
     companion object {
-        private val httpClient by lazy { ktor.client.HttpClient() }
+        private val httpClient by lazy {
+            HttpClient {
+                install(ContentNegotiation) {
+                    json(Json { ignoreUnknownKeys = true })
+                }
+            }
+        }
     }
 
     fun loadMissions() {
@@ -28,8 +40,8 @@ class MissionListViewModel(
             try {
                 val themeParam = if (selectedTheme != null) "&theme=$selectedTheme" else ""
                 val url = "$apiBaseUrl/api/v1/missions?upcoming=true$themeParam"
-                val response = httpClient.get(url)
-                missions = response.body<MissionListResponse>().missions
+                val response: MissionListResponse = httpClient.get(url).body()
+                missions = response.missions
             } catch (e: Exception) {
                 error = e.message
             } finally {
