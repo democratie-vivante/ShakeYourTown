@@ -1,7 +1,8 @@
 package com.shakeyourtown.missions.models
 
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Serializable
 enum class MissionTheme {
@@ -20,8 +21,8 @@ enum class MissionStatus {
 }
 
 @Serializable
-data class Mission(
-    val id: String = UUID.randomUUID().toString(),
+data class Mission @OptIn(ExperimentalUuidApi::class) constructor(
+    val id: String = Uuid.random().toString(),
     val title: String,
     val description: String,
     val theme: MissionTheme,
