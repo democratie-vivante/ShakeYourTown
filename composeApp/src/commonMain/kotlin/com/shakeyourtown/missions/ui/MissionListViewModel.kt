@@ -17,6 +17,10 @@ class MissionListViewModel(
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
+    companion object {
+        private val httpClient by lazy { ktor.client.HttpClient() }
+    }
+
     fun loadMissions() {
         scope.launch {
             isLoading = true
@@ -24,7 +28,7 @@ class MissionListViewModel(
             try {
                 val themeParam = if (selectedTheme != null) "&theme=$selectedTheme" else ""
                 val url = "$apiBaseUrl/api/v1/missions?upcoming=true$themeParam"
-                val response = ktor.client.HttpClient().get(url)
+                val response = httpClient.get(url)
                 missions = response.body<MissionListResponse>().missions
             } catch (e: Exception) {
                 error = e.message

@@ -28,6 +28,7 @@ class MissionStorage(private val dataDir: File) {
                     missions = json.decodeFromString<MutableList<Mission>>(content)
                 }
             } catch (e: Exception) {
+                System.err.println("WARNING: Failed to load missions from ${file.absolutePath}: ${e.message}. Starting with empty data.")
                 missions = mutableListOf()
             }
         }
@@ -112,6 +113,23 @@ class MissionStorage(private val dataDir: File) {
             currentParticipants = maxOf(0, mission.currentParticipants - 1),
             updatedAt = Instant.now().toString(),
             status = if (mission.status == MissionStatus.FULL && mission.currentParticipants - 1 < mission.maxParticipants) MissionStatus.PUBLISHED else mission.status
+        )
+        return update(updated)
+    }
+
+    @Synchronized
+    fun tryCreateSignup(missionId: String): Result {
+        val mission = getById(missionId) ?: return Result.NotFound
+        if (mission.currentParticipants >= mission.maxParticipants) {
+            return Result.Error("Mission is full")
+        }
+        if (mission.status !in listOf(MissionStatus.PUBLISHED, MissionStatus.FULL)) {
+            return Result.Error("Mission not available for signup")
+        }
+        val updated = mission.copy(
+            currentParticipants = mission.currentParticipants + 1,
+            updatedAt = Instant.now().toString(),
+            status = if (mission.currentParticipants + 1 >= mission.maxParticipants) MissionStatus.FULL else mission.status
         )
         return update(updated)
     }

@@ -41,7 +41,7 @@ fun Application.module() {
             call.respondText("Civic Missions API v1")
         }
         
-        missionsRoutes(missionStorage, signupStorage)
+        missionsRoutes(missionStorage, signupStorage, organizerStorage)
         authRoutes(sessionManager, organizerStorage)
         organizerRoutes(missionStorage, signupStorage, organizerStorage, sessionManager)
     }
