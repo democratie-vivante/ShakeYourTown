@@ -1,7 +1,8 @@
 package com.shakeyourtown.missions.models
 
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Serializable
 enum class SignupStatus {
@@ -10,8 +11,8 @@ enum class SignupStatus {
 }
 
 @Serializable
-data class Signup(
-    val id: String = UUID.randomUUID().toString(),
+data class Signup @OptIn(ExperimentalUuidApi::class) constructor(
+    val id: String = Uuid.random().toString(),
     val missionId: String,
     val participantName: String,
     val contactEmail: String = "",
