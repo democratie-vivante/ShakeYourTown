@@ -15,26 +15,26 @@ This implementation follows an MVP-first approach with incremental delivery:
 
 Project initialization and configuration.
 
-- [ ] T001 Create missions feature directory structure in server/src/kotlin/com/shakeyourtown/missions/
-- [ ] T002 Create missions feature directory structure in shared/src/commonMain/kotlin/com/shakeyourtown/missions/
-- [ ] T003 Create missions feature directory structure in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/
-- [ ] T004 Add Ktor server dependencies to server/build.gradle.kts (ktor-server-core, ktor-server-netty)
-- [ ] T005 Configure server port and data directory in server/src/kotlin/com/shakeyourtown/Application.kt
+- [X] T001 Create missions feature directory structure in server/src/kotlin/io/mbras/syt/missions/
+- [X] T002 Create missions feature directory structure in shared/src/commonMain/kotlin/com/shakeyourtown/missions/
+- [X] T003 Create missions feature directory structure in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/
+- [X] T004 Add Ktor server dependencies to server/build.gradle.kts (ktor-server-core, ktor-server-netty)
+- [X] T005 Configure server port and data directory in server/src/kotlin/io/mbras/syt/Application.kt
 
 ## Phase 2: Foundational
 
 Shared infrastructure required for all user stories.
 
-- [ ] T006 [P] Define Mission data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Mission.kt
-- [ ] T007 [P] Define Signup data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Signup.kt
-- [ ] T008 [P] Define Organizer data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Organizer.kt
-- [ ] T009 [P] Define MissionTheme enum in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/MissionTheme.kt
-- [ ] T010 [P] Define MissionStatus enum in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/MissionStatus.kt
-- [ ] T011 Create MissionStorage service in server/src/kotlin/com/shakeyourtown/missions/storage/MissionStorage.kt
-- [ ] T012 Create SignupStorage service in server/src/kotlin/com/shakeyourtown/missions/storage/SignupStorage.kt
-- [ ] T013 Create OrganizerStorage service in server/src/kotlin/com/shakeyourtown/missions/storage/OrganizerStorage.kt
-- [ ] T014 Create authentication middleware in server/src/kotlin/com/shakeyourtown/missions/auth/AuthMiddleware.kt
-- [ ] T015 Create session management in server/src/kotlin/com/shakeyourtown/missions/auth/SessionManager.kt
+- [X] T006 [P] Define Mission data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Mission.kt
+- [X] T007 [P] Define Signup data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Signup.kt
+- [X] T008 [P] Define Organizer data class in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/Organizer.kt
+- [X] T009 [P] Define MissionTheme enum in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/MissionTheme.kt
+- [X] T010 [P] Define MissionStatus enum in shared/src/commonMain/kotlin/com/shakeyourtown/missions/models/MissionStatus.kt
+- [X] T011 Create MissionStorage service in server/src/main/kotlin/io/mbras/syt/missions/storage/MissionStorage.kt
+- [X] T012 Create SignupStorage service in server/src/main/kotlin/io/mbras/syt/missions/storage/SignupStorage.kt
+- [X] T013 Create OrganizerStorage service in server/src/main/kotlin/io/mbras/syt/missions/storage/OrganizerStorage.kt
+- [X] T014 Create authentication middleware in server/src/main/kotlin/io/mbras/syt/missions/auth/AuthMiddleware.kt
+- [X] T015 Create session management in server/src/main/kotlin/io/mbras/syt/missions/auth/SessionManager.kt
 
 ## Phase 3: User Story 1 - Citizen Discovers and Signs Up (P1)
 
@@ -42,20 +42,20 @@ Shared infrastructure required for all user stories.
 
 **Independent Test**: User visits public page, filters missions, views details, submits signup - all without authentication.
 
-- [ ] T016 [P] [US1] Implement GET /api/v1/missions endpoint in server/src/kotlin/com/shakeyourtown/missions/routes/MissionsRoutes.kt
-- [ ] T017 [P] [US1] Implement theme filtering (MOBILITY, RESOURCES, FOOD) in MissionsRoutes.kt
-- [ ] T018 [P] [US1] Implement availability filtering (upcoming only vs all) in MissionsRoutes.kt
-- [ ] T019 [US1] Implement GET /api/v1/missions/{id} endpoint for mission details in MissionsRoutes.kt
-- [ ] T020 [US1] Implement POST /api/v1/missions/{id}/signup endpoint in server/src/kotlin/com/shakeyourtown/missions/routes/SignupRoutes.kt
-- [ ] T021 [US1] Add validation: at least email OR phone required, in SignupRoutes.kt
-- [ ] T022 [US1] Add validation: cannot sign up if mission FULL/CANCELLED/DONE, in SignupRoutes.kt
-- [ ] T023 [US1] Add validation: cannot sign up twice with same contact, in SignupRoutes.kt
-- [ ] T024 [US1] Display privacy notice at signup (FR-005) in composeApp UI
-- [ ] T025 [US1] Create MissionListScreen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionListScreen.kt
-- [ ] T026 [US1] Create MissionDetailScreen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionDetailScreen.kt
-- [ ] T027 [US1] Create SignupForm component in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/SignupForm.kt
-- [ ] T028 [US1] Implement MissionListViewModel in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionListViewModel.kt
-- [ ] T029 [US1] Add theme filter UI (Mobility/Resources/Food buttons) in MissionListScreen.kt
+- [X] T016 [P] [US1] Implement GET /api/v1/missions endpoint in server/src/main/kotlin/io/mbras/syt/missions/routes/MissionsRoutes.kt
+- [X] T017 [P] [US1] Implement theme filtering (MOBILITY, RESOURCES, FOOD) in MissionsRoutes.kt
+- [X] T018 [P] [US1] Implement availability filtering (upcoming only vs all) in MissionsRoutes.kt
+- [X] T019 [US1] Implement GET /api/v1/missions/{id} endpoint for mission details in MissionsRoutes.kt
+- [X] T020 [US1] Implement POST /api/v1/missions/{id}/signup endpoint in server/src/main/kotlin/io/mbras/syt/missions/routes/MissionsRoutes.kt
+- [X] T021 [US1] Add validation: at least email OR phone required, in MissionsRoutes.kt
+- [X] T022 [US1] Add validation: cannot sign up if mission FULL/CANCELLED/DONE, in MissionsRoutes.kt
+- [X] T023 [US1] Add validation: cannot sign up twice with same contact, in MissionsRoutes.kt
+- [X] T024 [US1] Display privacy notice at signup (FR-005) in composeApp UI
+- [X] T025 [US1] Create MissionListScreen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionListScreen.kt
+- [X] T026 [US1] Create MissionDetailScreen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionDetailScreen.kt
+- [X] T027 [US1] Create SignupForm component in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/SignupFormScreen.kt
+- [X] T028 [US1] Implement MissionListViewModel in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionListViewModel.kt
+- [X] T029 [US1] Add theme filter UI (Mobility/Resources/Food buttons) in MissionListScreen.kt
 
 ## Phase 4: User Story 2 - Organizer Creates and Publishes Mission (P1)
 
