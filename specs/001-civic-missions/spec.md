@@ -5,6 +5,14 @@
 **Status**: Draft  
 **Input**: User description: "Build a civic missions MVP for a small municipality (~3,800 residents) to turn local priorities (soft mobility, resource sharing, food autonomy) into concrete, trackable actions..."
 
+## Public cible & Langue
+
+**Public cible** : Habitants d'une commune française (~3 800 habitants)  
+**Langue principale** : Français (fr-FR)  
+**Localisation** : Toutes les interfaces utilisateur (citoyens et organisateurs), messages de confirmation, messages d'erreur, notifications et contenus affichés DOIVENT être en français. Les données internes (clés d'API, enums techniques) restent en anglais.
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Citizen Discovers and Signs Up for a Mission (Priority: P1)
@@ -124,6 +132,7 @@ An organizer sends important updates to participants - confirmations, changes, o
 - **FR-016**: System MUST show mission status (draft, published, full, cancelled, done) clearly on public listings
 - **FR-017**: System MUST require organizer authentication for back-office access
 - **FR-018**: System MUST NOT collect more participant data than name and contact method (email or phone)
+- **FR-019**: System MUST display all user-facing content (UI labels, messages, confirmations, error messages, notifications, privacy notices) in French (fr-FR). Internal technical identifiers (API field names, enum values, HTTP headers) remain in English.
 
 ### Key Entities *(include if feature involves data)*
 

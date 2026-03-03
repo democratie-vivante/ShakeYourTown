@@ -6,6 +6,8 @@ Base URL: `/api/v1`
 
 All responses include `Content-Type: application/json`
 
+**Locale**: All user-facing strings (titles, descriptions, messages, error messages) MUST be in French (fr-FR). Technical field names and enum values remain in English.
+
 ---
 
 ## Public Endpoints
@@ -29,15 +31,15 @@ GET /missions?theme={theme}&status={status}&upcoming={bool}
   "missions": [
     {
       "id": "uuid",
-      "title": "Planting Day at Community Garden",
-      "description": "Help us plant vegetables...",
+      "title": "Journée plantation au jardin partagé",
+      "description": "Aidez-nous à planter des légumes...",
       "theme": "FOOD",
       "dateTime": "2026-04-15T10:00:00Z",
-      "location": "123 Main Street, Town Center",
+      "location": "123 rue de la Mairie, Centre-ville",
       "maxParticipants": 10,
       "currentParticipants": 5,
       "status": "PUBLISHED",
-      "whatToBring": "Gloves, water bottle"
+      "whatToBring": "Gants, bouteille d'eau"
     }
   ]
 }
@@ -55,16 +57,16 @@ GET /missions/{id}
 ```json
 {
   "id": "uuid",
-  "title": "Planting Day at Community Garden",
-  "description": "Help us plant vegetables...",
+  "title": "Journée plantation au jardin partagé",
+  "description": "Aidez-nous à planter des légumes...",
   "theme": "FOOD",
   "dateTime": "2026-04-15T10:00:00Z",
-  "location": "123 Main Street, Town Center",
+  "location": "123 rue de la Mairie, Centre-ville",
   "maxParticipants": 10,
   "currentParticipants": 5,
   "status": "PUBLISHED",
-  "whatToBring": "Gloves, water bottle",
-  "organizerContact": "organizer@town.fr"
+  "whatToBring": "Gants, bouteille d'eau",
+  "organizerContact": "organisateur@mairie.fr"
 }
 ```
 
@@ -88,12 +90,12 @@ GET /missions/archive?theme={theme}&period={period}
   "missions": [
     {
       "id": "uuid",
-      "title": "Winter Bike Repair Workshop",
+      "title": "Atelier réparation vélos d'hiver",
       "theme": "MOBILITY",
       "dateTime": "2026-01-20T14:00:00Z",
       "status": "DONE",
       "actualParticipants": 8,
-      "completionSummary": "Repaired 12 bikes"
+      "completionSummary": "12 vélos réparés"
     }
   ]
 }
@@ -110,20 +112,20 @@ POST /missions/{id}/signup
 **Request Body**:
 ```json
 {
-  "participantName": "John Doe",
-  "contactEmail": "john@example.com",
+  "participantName": "Jean Dupont",
+  "contactEmail": "jean@example.fr",
   "contactPhone": null
 }
 ```
 
-**Privacy Notice**: Display before submission: "We collect your contact info only to coordinate this mission. We'll use it to confirm your signup and notify you of any changes."
+**Privacy Notice**: Display before submission: "Nous collectons vos coordonnées uniquement pour organiser cette mission. Elles seront utilisées pour confirmer votre inscription et vous informer de tout changement."
 
 **Response 201**:
 ```json
 {
   "success": true,
   "signupId": "uuid",
-  "message": "You're signed up! Confirmation sent to john@example.com"
+  "message": "Inscription confirmée ! Une confirmation a été envoyée à jean@example.fr"
 }
 ```
 
@@ -131,7 +133,7 @@ POST /missions/{id}/signup
 ```json
 {
   "error": "VALIDATION_ERROR",
-  "message": "Email or phone required",
+  "message": "Un email ou un numéro de téléphone est requis",
   "fields": ["contactEmail", "contactPhone"]
 }
 ```
@@ -140,7 +142,7 @@ POST /missions/{id}/signup
 ```json
 {
   "error": "MISSION_FULL",
-  "message": "This mission is now full"
+  "message": "Cette mission est complète"
 }
 ```
 
@@ -172,8 +174,8 @@ POST /auth/login
   "success": true,
   "organizer": {
     "id": "uuid",
-    "name": "Admin User",
-    "organization": "Town Hall"
+    "name": "Utilisateur Admin",
+    "organization": "Mairie"
   }
 }
 ```
@@ -182,7 +184,7 @@ POST /auth/login
 ```json
 {
   "error": "INVALID_CREDENTIALS",
-  "message": "Invalid username or password"
+  "message": "Identifiant ou mot de passe invalide"
 }
 ```
 
@@ -200,7 +202,7 @@ GET /organizer/missions
   "missions": [
     {
       "id": "uuid",
-      "title": "Planting Day",
+      "title": "Journée plantation",
       "status": "PUBLISHED",
       "currentParticipants": 5,
       "dateTime": "2026-04-15T10:00:00Z"
@@ -220,13 +222,13 @@ POST /organizer/missions
 **Request Body**:
 ```json
 {
-  "title": "Planting Day at Community Garden",
-  "description": "Help us plant vegetables for the spring harvest",
+  "title": "Journée plantation au jardin partagé",
+  "description": "Aidez-nous à planter des légumes pour la récolte de printemps",
   "theme": "FOOD",
   "dateTime": "2026-04-15T10:00:00Z",
-  "location": "123 Main Street, Town Center",
+  "location": "123 rue de la Mairie, Centre-ville",
   "maxParticipants": 10,
-  "whatToBring": "Gloves, water bottle"
+  "whatToBring": "Gants, bouteille d'eau"
 }
 ```
 
@@ -249,7 +251,7 @@ PUT /organizer/missions/{id}
 **Request Body** (partial update allowed):
 ```json
 {
-  "title": "Updated Title",
+  "title": "Titre mis à jour",
   "maxParticipants": 15
 }
 ```
@@ -301,8 +303,8 @@ GET /organizer/missions/{id}/signups
   "signups": [
     {
       "id": "uuid",
-      "participantName": "John Doe",
-      "contactEmail": "john@example.com",
+      "participantName": "Jean Dupont",
+      "contactEmail": "jean@example.fr",
       "contactPhone": "+33123456789",
       "signedUpAt": "2026-03-01T10:00:00Z",
       "status": "CONFIRMED"
@@ -324,21 +326,21 @@ GET /organizer/missions/{id}/export
 Content-Type: text/csv
 Content-Disposition: attachment; filename="mission-{id}-signups.csv"
 
-Participant Name,Email,Phone,Signed Up
-John Doe,john@example.com,+33123456789,2026-03-01T10:00:00Z
+Nom du participant,Email,Téléphone,Inscrit le
+Jean Dupont,jean@example.fr,+33123456789,2026-03-01T10:00:00Z
 ```
 
 ---
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| VALIDATION_ERROR | Request body validation failed |
-| NOT_FOUND | Resource not found |
-| UNAUTHORIZED | Authentication required |
-| FORBIDDEN | Insufficient permissions |
-| MISSION_FULL | Mission at capacity |
-| MISSION_CANCELLED | Mission was cancelled |
-| INVALID_TRANSITION | Status transition not allowed |
-| DUPLICATE_SIGNUP | Already signed up |
+| Code | Description | User-facing message (fr) |
+|------|-------------|--------------------------|
+| VALIDATION_ERROR | Request body validation failed | "Erreur de validation" |
+| NOT_FOUND | Resource not found | "Ressource introuvable" |
+| UNAUTHORIZED | Authentication required | "Authentification requise" |
+| FORBIDDEN | Insufficient permissions | "Permissions insuffisantes" |
+| MISSION_FULL | Mission at capacity | "Cette mission est complète" |
+| MISSION_CANCELLED | Mission was cancelled | "Cette mission a été annulée" |
+| INVALID_TRANSITION | Status transition not allowed | "Changement de statut non autorisé" |
+| DUPLICATE_SIGNUP | Already signed up | "Vous êtes déjà inscrit(e) à cette mission" |

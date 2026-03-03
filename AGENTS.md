@@ -22,6 +22,14 @@ tests/
 
 Kotlin 2.2.20: Follow standard conventions
 
+## Localization
+
+- **Target audience**: French municipality (~3,800 inhabitants)
+- **Primary language**: French (fr-FR)
+- All user-facing content (UI labels, messages, error messages, notifications) MUST be in French
+- Internal code identifiers, API field names, and enum values remain in English
+- Date format: dd/MM/yyyy, decimal separator: comma
+
 ## Recent Changes
 
 - 001-civic-missions: Updated to Kotlin 2.2.20 + Kotlin stdlib, Compose Multiplatform 1.10.1, Ktor 3.4.0 (minimal - no external dependencies)

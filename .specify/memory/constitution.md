@@ -49,6 +49,9 @@ The application MUST collect only minimum personal data necessary for functional
 ### Accessibility Requirements
 All UI MUST meet WCAG 2.1 AA standards. Screen reader compatibility REQUIRED for all interactive elements. Touch targets minimum 48dp on mobile. Color contrast ratios MUST meet 4.5:1 for normal text.
 
+### Localization Requirements
+**Primary language**: French (fr-FR). All user-facing content (UI labels, messages, confirmations, error messages, notifications, privacy notices) MUST be in French. Internal technical identifiers (API field names, enum values, code identifiers) remain in English. Date and number formatting MUST follow French conventions (dd/MM/yyyy, comma as decimal separator).
+
 ### Security Standards
 All API endpoints MUST require authentication where applicable. Input validation on all user-provided data. No secrets stored in code or client-side storage. HTTPS-only for all network communication.
 
