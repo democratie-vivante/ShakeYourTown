@@ -11,8 +11,8 @@ Build a civic missions MVP enabling a small municipality (~3,800 residents) to p
 
 ## Technical Context
 
-**Language/Version**: Kotlin 2.2.0  
-**Primary Dependencies**: Kotlin stdlib, Compose Multiplatform 1.8.2, Ktor 3.2.0 (minimal - no external dependencies)  
+**Language/Version**: Kotlin 2.2.20  
+**Primary Dependencies**: Kotlin stdlib, Compose Multiplatform 1.10.1, Ktor 3.4.0 (minimal - no external dependencies)  
 **Storage**: File-based JSON with in-memory caching (see research.md)  
 **Testing**: Kotlin Test, JUnit 4.13.2, Compose UI Testing  
 **Target Platform**: Android (minSdk 24), iOS, Web (WASM), Server (Ktor)  

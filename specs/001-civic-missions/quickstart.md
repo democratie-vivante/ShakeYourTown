@@ -4,8 +4,8 @@
 
 ### Prerequisites
 
-- Kotlin 2.2.0
-- JDK 17+
+- Kotlin 2.2.20
+- JDK 21+
 - Android Studio or IntelliJ IDEA
 - Xcode (for iOS, macOS only)
 
@@ -143,7 +143,7 @@ Per Constitution Principle IV:
 
 ### Server won't start
 - Check port 8080 is available
-- Verify JDK 17+ is installed: `java -version`
+- Verify JDK 21+ is installed: `java -version`
 
 ### Build fails
 - Clean and rebuild: `./gradlew clean build`
