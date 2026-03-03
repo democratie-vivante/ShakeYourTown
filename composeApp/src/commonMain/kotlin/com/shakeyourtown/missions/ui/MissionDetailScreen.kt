@@ -23,10 +23,10 @@ fun MissionDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(mission?.title ?: "Mission Details") },
+                title = { Text(mission?.title ?: "D\u00e9tail de la mission") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour")
                     }
                 }
             )
@@ -54,7 +54,7 @@ fun MissionDetailScreen(
                 }
                 mission == null -> {
                     Text(
-                        text = "Mission not found",
+                        text = "Mission introuvable",
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(16.dp)
@@ -62,7 +62,7 @@ fun MissionDetailScreen(
                 }
                 mission.status == "CANCELLED" -> {
                     Text(
-                        text = "This mission has been cancelled",
+                        text = "Cette mission a \u00e9t\u00e9 annul\u00e9e",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -80,7 +80,7 @@ fun MissionDetailScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = mission.theme,
+                            text = themeLabel(mission.theme),
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -94,15 +94,15 @@ fun MissionDetailScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        DetailRow(label = "Date & Time", value = mission.dateTime.replace("T", " "))
-                        DetailRow(label = "Location", value = mission.location)
+                        DetailRow(label = "Date et heure", value = mission.dateTime.replace("T", " "))
+                        DetailRow(label = "Lieu", value = mission.location)
                         DetailRow(
                             label = "Participants",
                             value = "${mission.currentParticipants}/${mission.maxParticipants}"
                         )
 
                         if (mission.whatToBring.isNotBlank()) {
-                            DetailRow(label = "What to bring", value = mission.whatToBring)
+                            DetailRow(label = "\u00c0 apporter", value = mission.whatToBring)
                         }
 
                         Spacer(modifier = Modifier.height(32.dp))
@@ -113,14 +113,14 @@ fun MissionDetailScreen(
                                 enabled = false,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Mission is Full")
+                                Text("Mission compl\u00e8te")
                             }
                         } else {
                             Button(
                                 onClick = onSignupClick,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Sign Up")
+                                Text("S'inscrire")
                             }
                         }
                     }
