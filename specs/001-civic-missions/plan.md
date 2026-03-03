@@ -16,6 +16,7 @@ Build a civic missions MVP enabling a small municipality (~3,800 residents) to p
 **Storage**: File-based JSON with in-memory caching (see research.md)  
 **Testing**: Kotlin Test, JUnit 4.13.2, Compose UI Testing  
 **Target Platform**: Android (minSdk 24), iOS, Web (WASM), Server (Ktor)  
+**Locale**: Français (fr-FR) - public cible : habitants d'une commune française. Toute l'interface utilisateur et les messages affichés sont en français.  
 **Project Type**: Kotlin Multiplatform mobile-app + web-service  
 **Performance Goals**: UI response <100ms, cold start <3s, data sync <5s, memory <150MB (per constitution)  
 **Constraints**: ~3,800 residents, offline-capable desirable for rural connectivity  
