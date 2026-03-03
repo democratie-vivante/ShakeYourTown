@@ -1,115 +1,149 @@
-# Feature Specification: [FEATURE NAME]
+# Feature Specification: Civic Missions MVP
 
-**Feature Branch**: `[###-feature-name]`  
-**Created**: [DATE]  
+**Feature Branch**: `001-civic-missions`  
+**Created**: 2026-03-03  
 **Status**: Draft  
-**Input**: User description: "$ARGUMENTS"
+**Input**: User description: "Build a civic missions MVP for a small municipality (~3,800 residents) to turn local priorities (soft mobility, resource sharing, food autonomy) into concrete, trackable actions..."
 
 ## User Scenarios & Testing *(mandatory)*
 
-<!--
-  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
-  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
-  you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
-  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
-  - Demonstrated to users independently
--->
+### User Story 1 - Citizen Discovers and Signs Up for a Mission (Priority: P1)
 
-### User Story 1 - [Brief Title] (Priority: P1)
+A resident visits the public mission board, browses available missions, finds one that matches their interests and schedule, and signs up in under one minute without creating an account.
 
-[Describe this user journey in plain language]
+**Why this priority**: This is the core value proposition - enabling citizens to quickly discover and participate in local missions. Without this, the platform has no purpose.
 
-**Why this priority**: [Explain the value and why it has this priority level]
-
-**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
+**Independent Test**: Can be tested by a user visiting the public page, filtering missions, viewing details, and submitting a signup - all without authentication.
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-2. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **Given** the mission board is public, **When** a citizen browses without filtering, **Then** they see all published, available missions sorted by date
+2. **Given** the citizen applies a theme filter (mobility/resources/food), **When** they select one category, **Then** only missions matching that theme are displayed
+3. **Given** the citizen finds an interesting mission, **When** they click to view details, **Then** they see: title, description, date/time, location (text address), needed participants, what to bring, and organizer's contact method
+4. **Given** the citizen decides to participate, **When** they enter their name and contact (email or phone) and confirm, **Then** they receive immediate confirmation and the mission's participant count increases
+5. **Given** the mission reaches full capacity, **When** a citizen tries to sign up, **Then** they see "Full" status and cannot sign up
 
 ---
 
-### User Story 2 - [Brief Title] (Priority: P2)
+### User Story 2 - Organizer Creates and Publishes a Mission (Priority: P1)
 
-[Describe this user journey in plain language]
+A municipality staff member or local association organizer creates a new mission with all required details and publishes it to make it visible to citizens.
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: Without organizers creating missions, there is nothing for citizens to discover. This is the supply side of the platform.
 
-**Independent Test**: [Describe how this can be tested independently]
+**Independent Test**: Can be tested by an organizer logging in, creating a draft mission, filling all required fields, and publishing it - then verifying it appears on the public board.
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **Given** the organizer is authenticated in the back-office, **When** they start creating a new mission, **Then** they can enter: title, description, theme (mobility/resources/food), date and time, location (text address), maximum participants needed, what participants should bring
+2. **Given** the organizer saves a mission as draft, **When** they view it later, **Then** it remains in draft status and is not visible on the public board
+3. **Given** the organizer has completed all required fields, **When** they publish the mission, **Then** it becomes visible on the public board with "Published" status
+4. **Given** the organizer needs to make changes, **When** they edit a published mission, **Then** participants who already signed up are notified of changes
 
 ---
 
-### User Story 3 - [Brief Title] (Priority: P3)
+### User Story 3 - Citizen Browses Public Archive of Completed Missions (Priority: P2)
 
-[Describe this user journey in plain language]
+A resident or external visitor views the archive of completed missions to see proof of community action and engagement.
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: Transparency and proof of action builds trust in the platform and encourages more participation.
 
-**Independent Test**: [Describe how this can be tested independently]
+**Independent Test**: Can be tested by any visitor accessing the archive section and viewing past completed missions with their results.
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **Given** the archive page is public, **When** anyone visits, **Then** they see a list of completed (done) missions
+2. **Given** the visitor applies a date filter, **When** they select past month/quarter/year, **Then** only missions completed in that period are shown
+3. **Given** the visitor clicks on a completed mission, **Then** they see: original mission details plus actual outcome (actual participants, summary of what was accomplished)
+4. **Given** the visitor applies a theme filter, **Then** only completed missions matching that theme are displayed
 
 ---
 
-[Add more user stories as needed, each with an assigned priority]
+### User Story 4 - Organizer Manages Signups and Updates Mission Status (Priority: P2)
+
+An organizer monitors who has signed up for their missions, exports the participant list if needed, and updates the mission status as it progresses.
+
+**Why this priority**: Organizers need to coordinate participation and track mission progress without administrative overhead.
+
+**Independent Test**: Can be tested by an organizer viewing their mission's signup list, changing status, and exporting data.
+
+**Acceptance Scenarios**:
+
+1. **Given** a mission has signups, **When** the organizer views the mission, **Then** they see a list of participants with their contact information
+2. **Given** the organizer needs the data externally, **When** they click export, **Then** they receive a downloadable file (CSV format) with participant names and contact info
+3. **Given** the mission date passes and the event occurs, **When** the organizer marks it as "Done", **Then** it moves to the public archive
+4. **Given** circumstances require cancellation, **When** the organizer marks it as "Cancelled", **Then** all participants are notified and the mission is marked cancelled publicly
+
+---
+
+### User Story 5 - Organizer Communicates Updates to Participants (Priority: P3)
+
+An organizer sends important updates to participants - confirmations, changes, or cancellations - efficiently.
+
+**Why this priority**: Clear communication ensures participants show up and reduces no-shows.
+
+**Independent Test**: Can be tested by an organizer sending a message and participants receiving it via their provided contact method.
+
+**Acceptance Scenarios**:
+
+1. **Given** a participant has signed up, **When** the organizer sends an update, **Then** the participant receives it via email or SMS to the contact they provided
+2. **Given** the mission details change significantly, **When** the organizer saves changes, **Then** participants automatically receive a notification of the change
+3. **Given** the mission is cancelled, **When** the organizer updates status to cancelled, **Then** all participants are automatically notified
+
+---
 
 ### Edge Cases
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right edge cases.
--->
+- What happens when a participant wants to cancel their own signup?
+- How does the system handle multiple organizers for the same mission?
+- What happens if the organizer enters a past date for a mission?
+- How does the system handle duplicate signups (same person signing up twice)?
+- What happens if the mission reaches capacity while someone is in the signup process?
 
-- What happens when [boundary condition]?
-- How does system handle [error scenario]?
+---
 
 ## Requirements *(mandatory)*
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
--->
-
 ### Functional Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
-
-*Example of marking unclear requirements:*
-
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-001**: System MUST allow citizens to browse all published, non-full missions without authentication
+- **FR-002**: System MUST allow filtering missions by theme (mobility, resources, food)
+- **FR-003**: System MUST allow filtering missions by availability (upcoming only, show all including past)
+- **FR-004**: System MUST allow citizens to sign up for a mission by providing only name and either email OR phone number
+- **FR-005**: System MUST display a clear explanation at signup explaining why contact information is collected and how it will be used
+- **FR-006**: System MUST immediately confirm successful signup to the participant
+- **FR-007**: System MUST allow authenticated organizers to create missions with: title, description, theme, date/time, location (text), max participants, what to bring
+- **FR-008**: System MUST allow organizers to save missions as draft (not visible publicly) or publish immediately
+- **FR-009**: System MUST allow organizers to edit their own missions at any time
+- **FR-010**: System MUST automatically prevent signup when a mission reaches maximum participants
+- **FR-011**: System MUST allow organizers to view all signups for their missions with participant contact details
+- **FR-012**: System MUST allow organizers to export participant data as CSV
+- **FR-013**: System MUST allow organizers to update mission status: draft, published, full, cancelled, done
+- **FR-014**: System MUST automatically notify participants when a mission they signed up for is cancelled or significantly modified
+- **FR-015**: System MUST display a public archive of completed (done) missions visible to anyone without authentication
+- **FR-016**: System MUST show mission status (draft, published, full, cancelled, done) clearly on public listings
+- **FR-017**: System MUST require organizer authentication for back-office access
+- **FR-018**: System MUST NOT collect more participant data than name and contact method (email or phone)
 
 ### Key Entities *(include if feature involves data)*
 
-- **[Entity 1]**: [What it represents, key attributes without implementation]
-- **[Entity 2]**: [What it represents, relationships to other entities]
+- **Mission**: Represents a single civic action opportunity. Attributes: title, description, theme, date/time, location, max participants, current participants count, status, what to bring, created by (organizer), created at, updated at
+- **Signup**: Represents a citizen's registration for a mission. Attributes: mission reference, participant name, contact method (email or phone), signed up at, status (confirmed, cancelled)
+- **Organizer**: Represents a user who creates and manages missions. Attributes: name, organization, authentication credentials
+- **MissionArchive**: Read-only projection of completed missions for public viewing. Attributes: all mission fields plus actual participant count and completion summary
+
+---
 
 ## Success Criteria *(mandatory)*
 
-<!--
-  ACTION REQUIRED: Define measurable success criteria.
-  These must be technology-agnostic and measurable.
--->
-
 ### Measurable Outcomes
 
-- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
-- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
-- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
-- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-001**: Citizens can complete mission signup in under 1 minute from landing on the site to confirmation
+- **SC-002**: 100% of published missions are visible on the public board within 30 seconds of publishing
+- **SC-003**: Organizers can create and publish a new mission in under 5 minutes
+- **SC-004**: 95% of cancelled mission participants receive notification within 1 hour of cancellation
+- **SC-005**: Public archive loads within 3 seconds on standard broadband connection
+- **SC-006**: System supports at least 50 concurrent public visitors without performance degradation
+- **SC-007**: 90% of signups result in confirmed participation (visible via attendance tracking)
+- **SC-008**: At least 10% of municipality population (~380 residents) participates in at least one mission within first 6 months
+
