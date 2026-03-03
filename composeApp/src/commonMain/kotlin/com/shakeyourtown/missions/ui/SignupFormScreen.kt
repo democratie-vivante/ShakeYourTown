@@ -31,10 +31,10 @@ fun SignupFormScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Sign Up") },
+                title = { Text("Inscription") },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(Icons.Default.Close, contentDescription = "Fermer")
                     }
                 }
             )
@@ -52,17 +52,17 @@ fun SignupFormScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "You're signed up!",
+                        text = "Inscription confirm\u00e9e !",
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Check your email for confirmation.",
+                        text = "V\u00e9rifiez votre messagerie pour la confirmation.",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Button(onClick = onCancel) {
-                        Text("Done")
+                        Text("Termin\u00e9")
                     }
                 }
             }
@@ -75,7 +75,7 @@ fun SignupFormScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Sign up for: $missionTitle",
+                    text = "Inscription \u00e0 : $missionTitle",
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -89,12 +89,12 @@ fun SignupFormScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Privacy Notice",
+                            text = "Protection des donn\u00e9es",
                             style = MaterialTheme.typography.labelLarge
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "We collect your contact info only to coordinate this mission. We'll use it to confirm your signup and notify you of any changes.",
+                            text = "Nous collectons vos coordonn\u00e9es uniquement pour organiser cette mission. Elles seront utilis\u00e9es pour confirmer votre inscription et vous informer de tout changement.",
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -105,7 +105,7 @@ fun SignupFormScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Your Name *") },
+                    label = { Text("Votre nom *") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -115,14 +115,14 @@ fun SignupFormScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email (optional)") },
+                    label = { Text("Email (facultatif)") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
                 Text(
-                    text = "At least email OR phone is required",
+                    text = "Un email OU un num\u00e9ro de t\u00e9l\u00e9phone est requis",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
@@ -133,7 +133,7 @@ fun SignupFormScreen(
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
-                    label = { Text("Phone (optional)") },
+                    label = { Text("T\u00e9l\u00e9phone (facultatif)") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
@@ -149,7 +149,7 @@ fun SignupFormScreen(
                         onCheckedChange = { privacyAccepted = it }
                     )
                     Text(
-                        text = "I understand how my contact info will be used",
+                        text = "Je comprends comment mes coordonn\u00e9es seront utilis\u00e9es",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -178,7 +178,7 @@ fun SignupFormScreen(
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text("Confirm Sign Up")
+                        Text("Confirmer l'inscription")
                     }
                 }
             }

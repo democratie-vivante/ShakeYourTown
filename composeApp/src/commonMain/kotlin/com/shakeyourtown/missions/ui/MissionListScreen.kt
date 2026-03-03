@@ -36,10 +36,10 @@ fun MissionListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Civic Missions") },
+                title = { Text("Missions citoyennes") },
                 actions = {
                     TextButton(onClick = onNavigateToArchive) {
-                        Text("Archive")
+                        Text("Archives")
                     }
                 }
             )
@@ -60,22 +60,22 @@ fun MissionListScreen(
                 FilterChip(
                     selected = selectedTheme == null,
                     onClick = { onThemeSelected(null) },
-                    label = { Text("All") }
+                    label = { Text("Toutes") }
                 )
                 FilterChip(
                     selected = selectedTheme == "MOBILITY",
                     onClick = { onThemeSelected("MOBILITY") },
-                    label = { Text("Mobility") }
+                    label = { Text("Mobilit\u00e9") }
                 )
                 FilterChip(
                     selected = selectedTheme == "RESOURCES",
                     onClick = { onThemeSelected("RESOURCES") },
-                    label = { Text("Resources") }
+                    label = { Text("Ressources") }
                 )
                 FilterChip(
                     selected = selectedTheme == "FOOD",
                     onClick = { onThemeSelected("FOOD") },
-                    label = { Text("Food") }
+                    label = { Text("Alimentation") }
                 )
             }
 
@@ -92,7 +92,7 @@ fun MissionListScreen(
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
                     Text(
-                        text = "No missions available",
+                        text = "Aucune mission disponible",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -139,10 +139,10 @@ fun MissionCard(
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = mission.theme,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+                    text = themeLabel(mission.theme),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = mission.description.take(100) + if (mission.description.length > 100) "..." else "",
@@ -169,6 +169,7 @@ fun MissionCard(
 
 @Composable
 fun MissionStatusChip(status: String) {
+    val label = statusLabel(status)
     val (containerColor, textColor) = when (status) {
         "PUBLISHED" -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
         "FULL" -> MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
@@ -181,10 +182,26 @@ fun MissionStatusChip(status: String) {
         shape = MaterialTheme.shapes.small
     ) {
         Text(
-            text = status,
+            text = label,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
             color = textColor
         )
     }
+}
+
+internal fun themeLabel(theme: String): String = when (theme) {
+    "MOBILITY" -> "Mobilit\u00e9"
+    "RESOURCES" -> "Ressources"
+    "FOOD" -> "Alimentation"
+    else -> theme
+}
+
+internal fun statusLabel(status: String): String = when (status) {
+    "PUBLISHED" -> "Publi\u00e9e"
+    "FULL" -> "Compl\u00e8te"
+    "CANCELLED" -> "Annul\u00e9e"
+    "DONE" -> "Termin\u00e9e"
+    "DRAFT" -> "Brouillon"
+    else -> status
 }
