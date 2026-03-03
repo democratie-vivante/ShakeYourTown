@@ -1,50 +1,83 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# ShakeYourTown Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality Standards
+Every feature MUST maintain high code quality through: consistent Kotlin coding conventions across all targets (Android, iOS, Web, Server), meaningful naming for all identifiers, single-responsibility functions under 30 lines, and comprehensive documentation for public APIs. Code MUST be reviewed by at least one other contributor before merging. Technical debt MUST be tracked and addressed in subsequent iterations.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rationale**: Kotlin Multiplatform requires consistent practices across platforms; maintainability depends on readable, well-structured code.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Test-Driven Development (NON-NEGOTIABLE)
+All new functionality MUST be developed using TDD: unit tests written first (RED), implementation satisfies tests (GREEN), then refactor (REFACTOR). Minimum 80% code coverage required for business logic. Every public function MUST have at least one corresponding unit test. Integration tests REQUIRED for: cross-platform data sync, API contracts, and shared state management.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: TDD ensures correctness from the start and provides regression protection as the codebase grows.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Unified User Experience
+All platform UIs (Android, iOS, Web) MUST present consistent: terminology and labeling, interaction patterns, visual hierarchy, and accessibility standards. Platform-specific UI components MAY be used only when necessary for native feel, but MUST adhere to the shared design system. Every screen MUST be tested on all target platforms before release.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Users expect consistent experience regardless of how they access the app; trust in the democratic process requires professional presentation.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Performance Requirements
+The application MUST meet these performance targets: UI response time under 100ms for user interactions, cold start under 3 seconds on mobile, data sync completion under 5 seconds for typical operations, and memory usage under 150MB on mobile devices. Performance MUST be measured before each release using profiling tools.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Citizens using the app expect responsive experience; poor performance discourages participation in democratic processes.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Shared Code First
+Common business logic, data models, and domain rules MUST reside in the shared module. Platform-specific code is LIMITED to: native UI components, platform integrations (notifications, biometrics), and performance-critical rendering. Any duplication across platforms MUST be refactored into shared code.
+
+**Rationale**: Kotlin Multiplatform's value proposition is code sharing; duplication undermines maintainability and consistency.
+
+### VI. API Contract Stability
+All API endpoints (server and internal) MUST use explicit versioned contracts. Breaking changes REQUIRE a new version number and migration path. API documentation MUST be auto-generated from code contracts. Integration tests MUST verify contract compliance.
+
+**Rationale**: The app serves a municipality; stability ensures reliable access for all citizens regardless of their device or app version.
+
+### VII. Data Privacy by Design
+The application MUST collect only minimum personal data necessary for functionality. User data MUST be: encrypted at rest and in transit, retained only for required duration, and exportable/deletable by users. Privacy policy MUST be accessible from every data collection point.
+
+**Rationale**: Civic apps handle sensitive citizen data; trust requires demonstrable privacy protection.
+
+## Additional Constraints
+
+### Technology Stack
+- **Language**: Kotlin 1.9+ (multiplatform)
+- **UI Framework**: Compose Multiplatform
+- **Backend**: Ktor server
+- **Database**: [TO BE DETERMINED per feature]
+- **Testing**: Kotlin Test, Compose UI Testing
+
+### Accessibility Requirements
+All UI MUST meet WCAG 2.1 AA standards. Screen reader compatibility REQUIRED for all interactive elements. Touch targets minimum 48dp on mobile. Color contrast ratios MUST meet 4.5:1 for normal text.
+
+### Security Standards
+All API endpoints MUST require authentication where applicable. Input validation on all user-provided data. No secrets stored in code or client-side storage. HTTPS-only for all network communication.
+
+## Development Workflow
+
+### Quality Gates (Required for Merge)
+- All unit tests pass
+- All integration tests pass
+- Code coverage unchanged or improved
+- No linting/formatting violations
+- Documentation updated for any new public APIs
+- Performance benchmarks meet targets
+
+### Code Review Requirements
+- Minimum 1 reviewer approval for all changes
+- Reviewer MUST verify: tests included, no unintended regressions, documentation updated
+- Complex changes require 2 reviewers
+
+### Release Process
+- Release candidates tagged with semantic versioning
+- Release notes generated automatically from changelog
+- Hotfixes follow same process as regular releases (fast-track allowed)
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Amendment Procedure**: Any principle change requires: proposed amendment documented in PR, rationale provided with alternatives considered, migration plan if breaking, and approval from project maintainers.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Versioning Policy**: This constitution follows semantic versioning. MAJOR: Backward incompatible principle changes. MINOR: New principles or expanded guidance. PATCH: Clarifications, wording improvements.
+
+**Compliance Review**: Every feature specification MUST verify alignment with constitution principles. Every implementation plan MUST include a Constitution Check section.
+
+**Version**: 1.0.0 | **Ratified**: 2026-03-03 | **Last Amended**: 2026-03-03
