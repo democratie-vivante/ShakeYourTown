@@ -6,6 +6,7 @@ import com.shakeyourtown.missions.models.MissionStatus
 import com.shakeyourtown.missions.models.Signup
 import io.mbras.syt.missions.storage.MissionStorage
 import io.mbras.syt.missions.storage.SignupStorage
+import io.mbras.syt.missions.storage.OrganizerStorage
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -14,7 +15,8 @@ import kotlinx.serialization.Serializable
 
 fun Routing.missionsRoutes(
     missionStorage: MissionStorage,
-    signupStorage: SignupStorage
+    signupStorage: SignupStorage,
+    organizerStorage: OrganizerStorage
 ) {
     route("/api/v1/missions") {
         get {
@@ -43,7 +45,7 @@ fun Routing.missionsRoutes(
             } else if (mission.status !in listOf(MissionStatus.PUBLISHED, MissionStatus.FULL, MissionStatus.DONE)) {
                 call.respondError(404, "Mission not found")
             } else {
-                call.respond(mission.toDetailDto())
+                call.respond(mission.toDetailDto(organizerStorage))
             }
         }
 
@@ -76,8 +78,14 @@ fun Routing.missionsRoutes(
                 contactPhone = request.contactPhone
             )
             
-            signupStorage.create(signup)
-            missionStorage.incrementParticipants(id)
+            val signupResult = missionStorage.tryCreateSignup(id)
+            when (signupResult) {
+                is MissionStorage.Result.NotFound -> return@post call.respondError(404, "Mission not found")
+                is MissionStorage.Result.Error -> return@post call.respondError(409, signupResult.message)
+                is MissionStorage.Result.Success -> {
+                    signupStorage.create(signup)
+                }
+            }
 
             call.respond(
                 status = io.ktor.http.HttpStatusCode.Created,
@@ -113,9 +121,10 @@ private fun Mission.toPublicDto() = mapOf(
     "whatToBring" to whatToBring
 )
 
-private fun Mission.toDetailDto(): Map<String, String> {
+private fun Mission.toDetailDto(organizerStorage: OrganizerStorage): Map<String, String> {
     val dto = toPublicDto().toMutableMap()
-    dto["organizerContact"] = "mission@town.fr"
+    val organizer = organizerStorage.getById(organizerId)
+    dto["organizerContact"] = organizer?.organization?.let { "$it contact" } ?: "mission@town.fr"
     return dto
 }
 

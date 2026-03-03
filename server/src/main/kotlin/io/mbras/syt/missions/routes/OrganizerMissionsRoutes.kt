@@ -155,13 +155,21 @@ fun Routing.organizerRoutes(
             val csv = buildString {
                 appendLine("Participant Name,Email,Phone,Signed Up,Status")
                 signups.forEach {
-                    appendLine("${it.participantName},${it.contactEmail},${it.contactPhone},${it.signedUpAt},${it.status.name}")
+                    appendLine("${escapeCsv(it.participantName)},${escapeCsv(it.contactEmail)},${escapeCsv(it.contactPhone)},${escapeCsv(it.signedUpAt)},${escapeCsv(it.status.name)}")
                 }
             }
 
             call.response.headers.append(io.ktor.http.HttpHeaders.ContentDisposition, "attachment; filename=\"mission-${id}-signups.csv\"")
             call.respondText(csv, io.ktor.http.ContentType.Text.CSV)
         }
+    }
+}
+
+private fun escapeCsv(value: String): String {
+    return if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.startsWith("=") || value.startsWith("@") || value.startsWith("+") || value.startsWith("-")) {
+        "\"${value.replace("\"", "\"\"")}\""
+    } else {
+        value
     }
 }
 

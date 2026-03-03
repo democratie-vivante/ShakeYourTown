@@ -3,9 +3,11 @@ package io.mbras.syt
 import io.mbras.syt.model.Proposal
 import io.mbras.syt.model.ProposalCategory
 import io.mbras.syt.model.ProposalStatus
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+@OptIn(ExperimentalTime::class)
+val now = Clock.System.now()
 
 class ProposalRepository {
     
@@ -17,9 +19,9 @@ class ProposalRepository {
         return proposals.toList()
     }
     
+    @OptIn(ExperimentalTime::class)
     private fun createSampleProposals(): List<Proposal> {
-        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        
+
         return listOf(
             Proposal(
                 id = "1",

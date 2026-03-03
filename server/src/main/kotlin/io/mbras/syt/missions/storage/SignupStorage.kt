@@ -26,6 +26,7 @@ class SignupStorage(private val dataDir: File) {
                     signups = json.decodeFromString<MutableList<Signup>>(content)
                 }
             } catch (e: Exception) {
+                System.err.println("WARNING: Failed to load signups from ${file.absolutePath}: ${e.message}. Starting with empty data.")
                 signups = mutableListOf()
             }
         }
