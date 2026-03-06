@@ -9,9 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
+/**
+ * PIN-based authentication screen for organizer access.
+ * First visit: setup PIN + organizer name.
+ * Subsequent visits: enter PIN to unlock.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrganizerLoginScreen(
@@ -19,12 +23,13 @@ fun OrganizerLoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    val isSetup = !viewModel.isPinSet()
+    var pin by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var organization by remember { mutableStateOf("") }
 
-    LaunchedEffect(viewModel.isLoggedIn) {
-        if (viewModel.isLoggedIn) {
+    LaunchedEffect(viewModel.isAuthenticated) {
+        if (viewModel.isAuthenticated) {
             onLoginSuccess()
         }
     }
@@ -32,7 +37,7 @@ fun OrganizerLoginScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Connexion organisateur") }
+                title = { Text(if (isSetup) "Configuration organisateur" else "Connexion organisateur") }
             )
         }
     ) { padding ->
@@ -49,53 +54,67 @@ fun OrganizerLoginScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
-                text = "Connectez-vous pour g\u00e9rer vos missions",
+                text = if (isSetup)
+                    "Configurez votre acc\u00e8s organisateur"
+                else
+                    "Saisissez votre code PIN",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
 
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Identifiant") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+            if (isSetup) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Votre nom") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = organization,
+                    onValueChange = { organization = it },
+                    label = { Text("Organisation (optionnel)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Mot de passe") },
+                value = pin,
+                onValueChange = { if (it.length <= 4 && it.all { c -> c.isDigit() }) pin = it },
+                label = { Text("Code PIN (4 chiffres)") },
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    TextButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Text(if (passwordVisible) "Masquer" else "Afficher")
-                    }
-                },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
+                    keyboardType = KeyboardType.NumberPassword,
                     imeAction = ImeAction.Done
                 )
             )
 
-            if (viewModel.loginError != null) {
+            if (viewModel.pinError != null) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = viewModel.loginError!!,
+                    text = viewModel.pinError!!,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall
                 )
@@ -106,20 +125,16 @@ fun OrganizerLoginScreen(
             Button(
                 onClick = {
                     viewModel.clearError()
-                    viewModel.login(username, password)
+                    if (isSetup) {
+                        viewModel.setupPin(pin, name.ifBlank { "Organisateur" }, organization)
+                    } else {
+                        viewModel.verifyPin(pin)
+                    }
                 },
-                enabled = username.isNotBlank() && password.isNotBlank() && !viewModel.isLoading,
+                enabled = pin.length == 4 && (!isSetup || name.isNotBlank()),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (viewModel.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Text("Se connecter")
-                }
+                Text(if (isSetup) "Configurer" else "Se connecter")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
