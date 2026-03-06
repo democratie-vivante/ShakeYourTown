@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ fun OrganizerDashboardScreen(
     viewModel: OrganizerViewModel,
     onNavigateToEditor: (String?) -> Unit,
     onNavigateToMissionDetail: (String) -> Unit,
+    onNavigateToSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
     LaunchedEffect(Unit) {
@@ -30,6 +32,9 @@ fun OrganizerDashboardScreen(
             TopAppBar(
                 title = { Text("Tableau de bord") },
                 actions = {
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(Icons.Default.Settings, contentDescription = "Param\u00e8tres")
+                    }
                     IconButton(onClick = onLogout) {
                         Icon(Icons.Default.ExitToApp, contentDescription = "D\u00e9connexion")
                     }
@@ -47,6 +52,7 @@ fun OrganizerDashboardScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Welcome card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,6 +75,71 @@ fun OrganizerDashboardScreen(
                 }
             }
 
+            // Publish banner
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Publication",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Publiez vos missions pour les rendre visibles aux citoyens",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (viewModel.publishSuccess != null) {
+                        Text(
+                            text = viewModel.publishSuccess!!,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    if (viewModel.publishError != null) {
+                        Text(
+                            text = viewModel.publishError!!,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
+                    Button(
+                        onClick = {
+                            viewModel.clearPublishState()
+                            viewModel.publishToGitHub()
+                        },
+                        enabled = !viewModel.isPublishing
+                    ) {
+                        if (viewModel.isPublishing) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        Text("Publier sur GitHub Pages")
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Mission list
             if (viewModel.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -199,12 +270,8 @@ fun OrganizerMissionDetailScreen(
     onNavigateToEditor: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var showStatusMenu by remember { mutableStateOf(false) }
-
     LaunchedEffect(missionId) {
         viewModel.loadMissionDetail(missionId)
-        viewModel.loadSignups(missionId)
     }
 
     val mission = viewModel.selectedMission
@@ -242,6 +309,14 @@ fun OrganizerMissionDetailScreen(
                 Text(
                     text = "Participants: ${mission.currentParticipants}",
                     style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Les inscriptions arrivent dans votre Google Sheets",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -305,31 +380,6 @@ fun OrganizerMissionDetailScreen(
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Inscriptions (${viewModel.signups.size})",
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (viewModel.signups.isEmpty()) {
-                    Text(
-                        text = "Aucune inscription pour le moment",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        items(viewModel.signups) { signup ->
-                            SignupCard(signup)
-                        }
-                    }
-                }
             }
 
             if (viewModel.error != null) {
@@ -337,38 +387,6 @@ fun OrganizerMissionDetailScreen(
                 Text(
                     text = viewModel.error!!,
                     color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SignupCard(signup: OrganizerSignup) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text(
-                text = signup.participantName,
-                style = MaterialTheme.typography.titleSmall
-            )
-            if (signup.contactEmail.isNotBlank()) {
-                Text(
-                    text = signup.contactEmail,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            if (signup.contactPhone.isNotBlank()) {
-                Text(
-                    text = signup.contactPhone,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

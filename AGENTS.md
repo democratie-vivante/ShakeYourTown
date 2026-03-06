@@ -1,22 +1,59 @@
 # ShakeYourTown Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-03
+Auto-generated from all feature plans. Last updated: 2026-03-06
 
 ## Active Technologies
 
-- Kotlin 2.2.20 + Kotlin stdlib, Compose Multiplatform 1.10.1, Ktor 3.4.0 (minimal - no external dependencies) (001-civic-missions)
+- Kotlin 2.2.20 + Kotlin stdlib, Compose Multiplatform 1.10.1, Ktor Client 3.3.1 (HTTP only)
+- No backend server - zero-cost MVP architecture
+- Data storage: browser localStorage (WASM), in-memory (Android/iOS)
+- Publishing: GitHub Pages (static JSON)
+- Signups: Google Forms
+
+## Architecture (Zero-Cost MVP)
+
+```text
+Organizer device (browser / app)
+  └─ Creates/edits missions locally (localStorage)
+  └─ Publishes to GitHub Pages via GitHub Contents API
+         │
+Citizen browser (WASM web app)
+  └─ Fetches missions from static JSON URL
+  └─ Submits signups to Google Forms
+         │
+Google Sheets (organizer reads signups there)
+```
 
 ## Project Structure
 
 ```text
-backend/
-frontend/
-tests/
+composeApp/
+  src/commonMain/kotlin/
+    io/mbras/syt/App.kt                          # Navigation coordinator
+    com/shakeyourtown/missions/
+      ui/                                         # All UI screens + ViewModels
+      storage/                                    # Local storage (PlatformStorage, MissionStorage, SettingsStorage)
+      github/                                     # GitHub Pages publisher
+  src/wasmJsMain/                                 # WASM (web) entry point + localStorage impl
+  src/androidMain/                                # Android entry point + storage impl
+  src/iosMain/                                    # iOS entry point + storage impl
+shared/
+  src/commonMain/kotlin/
+    com/shakeyourtown/missions/models/            # Mission, Signup, Organizer data models
 ```
 
 ## Commands
 
-# Add commands for Kotlin 2.2.20
+```bash
+# Run WASM dev server (primary target)
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+
+# Build WASM production
+./gradlew :composeApp:wasmJsBrowserDistribution
+
+# Run Android
+./gradlew :composeApp:installDebug
+```
 
 ## Code Style
 
@@ -32,7 +69,8 @@ Kotlin 2.2.20: Follow standard conventions
 
 ## Recent Changes
 
-- 001-civic-missions: Updated to Kotlin 2.2.20 + Kotlin stdlib, Compose Multiplatform 1.10.1, Ktor 3.4.0 (minimal - no external dependencies)
+- feat/zero-cost-mvp: Removed backend server, switched to localStorage + GitHub Pages + Google Forms
+- 001-civic-missions: Original implementation with Ktor server backend
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

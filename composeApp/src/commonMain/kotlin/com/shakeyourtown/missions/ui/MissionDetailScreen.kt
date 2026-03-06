@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MissionDetailScreen(
-    mission: Mission?,
+    mission: PublicMission?,
     isLoading: Boolean,
     onBackClick: () -> Unit,
     onSignupClick: () -> Unit,

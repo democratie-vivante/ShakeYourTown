@@ -7,26 +7,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class Mission(
-    val id: String,
-    val title: String,
-    val description: String,
-    val theme: String,
-    val dateTime: String,
-    val location: String,
-    val maxParticipants: Int,
-    val currentParticipants: Int,
-    val status: String,
-    val whatToBring: String
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MissionListScreen(
-    missions: List<Mission>,
+    missions: List<PublicMission>,
     selectedTheme: String?,
     onThemeSelected: (String?) -> Unit,
     onMissionClick: (String) -> Unit,
@@ -121,7 +106,7 @@ fun MissionListScreen(
 
 @Composable
 fun MissionCard(
-    mission: Mission,
+    mission: PublicMission,
     onClick: () -> Unit
 ) {
     Card(

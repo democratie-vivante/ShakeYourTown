@@ -13,6 +13,7 @@ private enum class Screen {
     OrganizerDashboard,
     OrganizerMissionDetail,
     MissionEditor,
+    Settings,
     Archive
 }
 
@@ -46,7 +47,11 @@ fun App() {
                     },
                     isLoading = viewModel.isLoading,
                     onNavigateToOrganizer = {
-                        currentScreen = Screen.OrganizerLogin
+                        if (organizerViewModel.isAuthenticated) {
+                            currentScreen = Screen.OrganizerDashboard
+                        } else {
+                            currentScreen = Screen.OrganizerLogin
+                        }
                     }
                 )
             }
@@ -108,6 +113,9 @@ fun App() {
                         selectedMissionId = missionId
                         currentScreen = Screen.OrganizerMissionDetail
                     },
+                    onNavigateToSettings = {
+                        currentScreen = Screen.Settings
+                    },
                     onLogout = {
                         organizerViewModel.logout {
                             currentScreen = Screen.MissionList
@@ -146,6 +154,14 @@ fun App() {
                         } else {
                             Screen.OrganizerDashboard
                         }
+                    }
+                )
+            }
+
+            Screen.Settings -> {
+                SettingsScreen(
+                    onNavigateBack = {
+                        currentScreen = Screen.OrganizerDashboard
                     }
                 )
             }
