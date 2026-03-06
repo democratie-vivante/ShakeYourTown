@@ -22,7 +22,7 @@ fun Routing.authRoutes(
                     status = io.ktor.http.HttpStatusCode.Unauthorized,
                     message = LoginErrorResponse(
                         error = "INVALID_CREDENTIALS",
-                        message = "Invalid username or password"
+                        message = "Identifiant ou mot de passe invalide"
                     )
                 )
                 return@post

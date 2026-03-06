@@ -31,6 +31,7 @@ fun MissionListScreen(
     onThemeSelected: (String?) -> Unit,
     onMissionClick: (String) -> Unit,
     onNavigateToArchive: () -> Unit,
+    onNavigateToOrganizer: () -> Unit,
     isLoading: Boolean = false
 ) {
     Scaffold(
@@ -40,6 +41,9 @@ fun MissionListScreen(
                 actions = {
                     TextButton(onClick = onNavigateToArchive) {
                         Text("Archives")
+                    }
+                    TextButton(onClick = onNavigateToOrganizer) {
+                        Text("Organiser")
                     }
                 }
             )

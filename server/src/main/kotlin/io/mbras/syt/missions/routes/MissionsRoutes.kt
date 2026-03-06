@@ -38,37 +38,37 @@ fun Routing.missionsRoutes(
         }
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: return@get call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@get call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             if (mission == null) {
-                call.respondError(404, "Mission not found")
+                call.respondError(404, "Mission introuvable")
             } else if (mission.status !in listOf(MissionStatus.PUBLISHED, MissionStatus.FULL, MissionStatus.DONE)) {
-                call.respondError(404, "Mission not found")
+                call.respondError(404, "Mission introuvable")
             } else {
                 call.respond(mission.toDetailDto(organizerStorage))
             }
         }
 
         post("/{id}/signup") {
-            val id = call.parameters["id"] ?: return@post call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@post call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null) {
-                return@post call.respondError(404, "Mission not found")
+                return@post call.respondError(404, "Mission introuvable")
             }
             
             if (mission.status !in listOf(MissionStatus.PUBLISHED, MissionStatus.FULL)) {
-                return@post call.respondError(409, "Mission is not available for signup")
+                return@post call.respondError(409, "Cette mission n'est pas disponible pour inscription")
             }
 
             val request = call.receive<SignupRequest>()
             
             if (request.contactEmail.isBlank() && request.contactPhone.isBlank()) {
-                return@post call.respondError(400, "Email or phone required")
+                return@post call.respondError(400, "Un email ou un num\u00e9ro de t\u00e9l\u00e9phone est requis")
             }
 
             if (signupStorage.existsByMissionAndContact(id, request.contactEmail.takeIf { it.isNotBlank() }, request.contactPhone.takeIf { it.isNotBlank() })) {
-                return@post call.respondError(409, "Already signed up for this mission")
+                return@post call.respondError(409, "Vous \u00eates d\u00e9j\u00e0 inscrit(e) \u00e0 cette mission")
             }
 
             val signup = Signup(
@@ -80,7 +80,7 @@ fun Routing.missionsRoutes(
             
             val signupResult = missionStorage.tryCreateSignup(id)
             when (signupResult) {
-                is MissionStorage.Result.NotFound -> return@post call.respondError(404, "Mission not found")
+                is MissionStorage.Result.NotFound -> return@post call.respondError(404, "Mission introuvable")
                 is MissionStorage.Result.Error -> return@post call.respondError(409, signupResult.message)
                 is MissionStorage.Result.Success -> {
                     signupStorage.create(signup)
@@ -92,7 +92,7 @@ fun Routing.missionsRoutes(
                 message = SignupResponse(
                     success = true,
                     signupId = signup.id,
-                    message = "You're signed up! Confirmation sent to ${request.contactEmail.ifBlank { request.contactPhone }}"
+                    message = "Inscription confirm\u00e9e ! Une confirmation a \u00e9t\u00e9 envoy\u00e9e \u00e0 ${request.contactEmail.ifBlank { request.contactPhone }}"
                 )
             )
         }
@@ -146,7 +146,12 @@ data class SignupRequest(
 )
 
 private suspend fun ApplicationCall.respondError(code: Int, message: String) {
-    val errorCode = if (code == 400) "VALIDATION_ERROR" else "MISSION_ERROR"
+    val errorCode = when (code) {
+        400 -> "VALIDATION_ERROR"
+        404 -> "NOT_FOUND"
+        409 -> "MISSION_ERROR"
+        else -> "MISSION_ERROR"
+    }
     respond(
         status = io.ktor.http.HttpStatusCode.fromValue(code),
         message = MissionApiError(errorCode, message)

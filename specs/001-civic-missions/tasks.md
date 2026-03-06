@@ -63,16 +63,16 @@ Shared infrastructure required for all user stories.
 
 **Independent Test**: Organizer logs in, creates draft mission, fills required fields, publishes it - verified on public board.
 
-- [ ] T030 [P] [US2] Implement POST /api/v1/auth/login endpoint in server/src/kotlin/com/shakeyourtown/missions/routes/AuthRoutes.kt
-- [ ] T031 [P] [US2] Implement POST /api/v1/auth/logout endpoint in AuthRoutes.kt
-- [ ] T032 [US2] Implement POST /api/v1/organizer/missions (create) in server/src/kotlin/com/shakeyourtown/missions/routes/OrganizerMissionsRoutes.kt
-- [ ] T033 [US2] Implement PUT /api/v1/organizer/missions/{id} (update) in OrganizerMissionsRoutes.kt
-- [ ] T034 [US2] Implement PATCH /api/v1/organizer/missions/{id}/status in OrganizerMissionsRoutes.kt
-- [ ] T035 [US2] Add validation: status transitions follow allowed transitions per data-model.md
-- [ ] T036 [US2] Create organizer login screen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerLoginScreen.kt
-- [ ] T037 [US2] Create mission editor form in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionEditorScreen.kt
-- [ ] T038 [US2] Create organizer dashboard in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerDashboardScreen.kt
-- [ ] T039 [US2] Implement OrganizerViewModel in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerViewModel.kt
+- [X] T030 [P] [US2] Implement POST /api/v1/auth/login endpoint in server/src/kotlin/com/shakeyourtown/missions/routes/AuthRoutes.kt
+- [X] T031 [P] [US2] Implement POST /api/v1/auth/logout endpoint in AuthRoutes.kt
+- [X] T032 [US2] Implement POST /api/v1/organizer/missions (create) in server/src/kotlin/com/shakeyourtown/missions/routes/OrganizerMissionsRoutes.kt
+- [X] T033 [US2] Implement PUT /api/v1/organizer/missions/{id} (update) in OrganizerMissionsRoutes.kt
+- [X] T034 [US2] Implement PATCH /api/v1/organizer/missions/{id}/status in OrganizerMissionsRoutes.kt
+- [X] T035 [US2] Add validation: status transitions follow allowed transitions per data-model.md
+- [X] T036 [US2] Create organizer login screen in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerLoginScreen.kt
+- [X] T037 [US2] Create mission editor form in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/MissionEditorScreen.kt
+- [X] T038 [US2] Create organizer dashboard in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerDashboardScreen.kt
+- [X] T039 [US2] Implement OrganizerViewModel in composeApp/src/commonMain/kotlin/com/shakeyourtown/missions/ui/OrganizerViewModel.kt
 
 ## Phase 5: User Story 3 - Citizen Browses Public Archive (P2)
 
