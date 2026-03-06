@@ -54,29 +54,29 @@ fun Routing.organizerRoutes(
                     call.response.status(io.ktor.http.HttpStatusCode.Created)
                     call.respond(MissionCreateResponse(result.mission.id, result.mission.status.name))
                 }
-                is MissionStorage.Result.NotFound -> call.respondError(404, "Failed to create mission")
+                is MissionStorage.Result.NotFound -> call.respondError(404, "\u00c9chec de la cr\u00e9ation de la mission")
                 is MissionStorage.Result.Error -> call.respondError(400, result.message)
             }
         }
 
         get("/{id}") {
             val organizerId = authMiddleware.requireAuth(call)
-            val id = call.parameters["id"] ?: return@get call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@get call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null || mission.organizerId != organizerId) {
-                return@get call.respondError(404, "Mission not found")
+                return@get call.respondError(404, "Mission introuvable")
             }
             call.respond(mission)
         }
 
         put("/{id}") {
             val organizerId = authMiddleware.requireAuth(call)
-            val id = call.parameters["id"] ?: return@put call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@put call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null || mission.organizerId != organizerId) {
-                return@put call.respondError(404, "Mission not found")
+                return@put call.respondError(404, "Mission introuvable")
             }
 
             val request = call.receive<UpdateMissionRequest>()
@@ -93,42 +93,42 @@ fun Routing.organizerRoutes(
             val result = missionStorage.update(updated)
             when (result) {
                 is MissionStorage.Result.Success -> call.respond(MissionCreateResponse(result.mission.id, result.mission.status.name))
-                else -> call.respondError(400, "Failed to update mission")
+                else -> call.respondError(400, "\u00c9chec de la mise \u00e0 jour de la mission")
             }
         }
 
         patch("/{id}/status") {
             val organizerId = authMiddleware.requireAuth(call)
-            val id = call.parameters["id"] ?: return@patch call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@patch call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null || mission.organizerId != organizerId) {
-                return@patch call.respondError(404, "Mission not found")
+                return@patch call.respondError(404, "Mission introuvable")
             }
 
             val request = call.receive<StatusUpdateRequest>()
             val newStatus = try { MissionStatus.valueOf(request.status.uppercase()) } catch (e: Exception) {
-                return@patch call.respondError(400, "Invalid status")
+                return@patch call.respondError(400, "Statut invalide")
             }
 
             if (!isValidTransition(mission.status, newStatus)) {
-                return@patch call.respondError(400, "Invalid status transition from ${mission.status} to $newStatus")
+                return@patch call.respondError(400, "Transition de statut non autoris\u00e9e de ${mission.status} vers $newStatus")
             }
 
             val result = missionStorage.updateStatus(id, newStatus)
             when (result) {
                 is MissionStorage.Result.Success -> call.respond(MissionCreateResponse(result.mission.id, result.mission.status.name))
-                else -> call.respondError(400, "Failed to update status")
+                else -> call.respondError(400, "\u00c9chec de la mise \u00e0 jour du statut")
             }
         }
 
         get("/{id}/signups") {
             val organizerId = authMiddleware.requireAuth(call)
-            val id = call.parameters["id"] ?: return@get call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@get call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null || mission.organizerId != organizerId) {
-                return@get call.respondError(404, "Mission not found")
+                return@get call.respondError(404, "Mission introuvable")
             }
 
             val signups = signupStorage.getByMissionForExport(id)
@@ -144,16 +144,16 @@ fun Routing.organizerRoutes(
 
         get("/{id}/export") {
             val organizerId = authMiddleware.requireAuth(call)
-            val id = call.parameters["id"] ?: return@get call.respondError(400, "Missing mission ID")
+            val id = call.parameters["id"] ?: return@get call.respondError(400, "Identifiant de mission manquant")
             val mission = missionStorage.getById(id)
             
             if (mission == null || mission.organizerId != organizerId) {
-                return@get call.respondError(404, "Mission not found")
+                return@get call.respondError(404, "Mission introuvable")
             }
 
             val signups = signupStorage.getByMissionForExport(id)
             val csv = buildString {
-                appendLine("Participant Name,Email,Phone,Signed Up,Status")
+                appendLine("Nom du participant,Email,T\u00e9l\u00e9phone,Inscrit le,Statut")
                 signups.forEach {
                     appendLine("${escapeCsv(it.participantName)},${escapeCsv(it.contactEmail)},${escapeCsv(it.contactPhone)},${escapeCsv(it.signedUpAt)},${escapeCsv(it.status.name)}")
                 }

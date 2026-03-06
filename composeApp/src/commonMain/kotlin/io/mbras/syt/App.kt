@@ -2,16 +2,18 @@ package io.mbras.syt
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import com.shakeyourtown.missions.ui.MissionDetailScreen
-import com.shakeyourtown.missions.ui.MissionListScreen
-import com.shakeyourtown.missions.ui.MissionsViewModel
-import com.shakeyourtown.missions.ui.SignupFormScreen
+import com.shakeyourtown.missions.ui.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private enum class Screen {
     MissionList,
     MissionDetail,
-    Signup
+    Signup,
+    OrganizerLogin,
+    OrganizerDashboard,
+    OrganizerMissionDetail,
+    MissionEditor,
+    Archive
 }
 
 @Composable
@@ -19,8 +21,10 @@ private enum class Screen {
 fun App() {
     MaterialTheme {
         val viewModel = remember { MissionsViewModel() }
+        val organizerViewModel = remember { OrganizerViewModel() }
         var currentScreen by remember { mutableStateOf(Screen.MissionList) }
         var selectedMissionId by remember { mutableStateOf<String?>(null) }
+        var editingMissionId by remember { mutableStateOf<String?>(null) }
 
         LaunchedEffect(Unit) {
             viewModel.loadMissions()
@@ -37,8 +41,13 @@ fun App() {
                         viewModel.loadMissionDetail(missionId)
                         currentScreen = Screen.MissionDetail
                     },
-                    onNavigateToArchive = { /* Phase 5 - pas encore implemente */ },
-                    isLoading = viewModel.isLoading
+                    onNavigateToArchive = { 
+                        currentScreen = Screen.Archive 
+                    },
+                    isLoading = viewModel.isLoading,
+                    onNavigateToOrganizer = {
+                        currentScreen = Screen.OrganizerLogin
+                    }
                 )
             }
 
@@ -73,6 +82,79 @@ fun App() {
                     isLoading = viewModel.isSignupLoading,
                     error = viewModel.signupError,
                     success = viewModel.signupSuccess
+                )
+            }
+
+            Screen.OrganizerLogin -> {
+                OrganizerLoginScreen(
+                    viewModel = organizerViewModel,
+                    onLoginSuccess = {
+                        currentScreen = Screen.OrganizerDashboard
+                    },
+                    onNavigateBack = {
+                        currentScreen = Screen.MissionList
+                    }
+                )
+            }
+
+            Screen.OrganizerDashboard -> {
+                OrganizerDashboardScreen(
+                    viewModel = organizerViewModel,
+                    onNavigateToEditor = { missionId ->
+                        editingMissionId = missionId
+                        currentScreen = Screen.MissionEditor
+                    },
+                    onNavigateToMissionDetail = { missionId ->
+                        selectedMissionId = missionId
+                        currentScreen = Screen.OrganizerMissionDetail
+                    },
+                    onLogout = {
+                        organizerViewModel.logout {
+                            currentScreen = Screen.MissionList
+                        }
+                    }
+                )
+            }
+
+            Screen.OrganizerMissionDetail -> {
+                selectedMissionId?.let { missionId ->
+                    OrganizerMissionDetailScreen(
+                        viewModel = organizerViewModel,
+                        missionId = missionId,
+                        onNavigateToEditor = { id ->
+                            editingMissionId = id
+                            currentScreen = Screen.MissionEditor
+                        },
+                        onNavigateBack = {
+                            currentScreen = Screen.OrganizerDashboard
+                        }
+                    )
+                }
+            }
+
+            Screen.MissionEditor -> {
+                MissionEditorScreen(
+                    viewModel = organizerViewModel,
+                    missionId = editingMissionId,
+                    onSaveSuccess = {
+                        organizerViewModel.loadMissions()
+                        currentScreen = Screen.OrganizerDashboard
+                    },
+                    onNavigateBack = {
+                        currentScreen = if (editingMissionId != null) {
+                            Screen.OrganizerMissionDetail
+                        } else {
+                            Screen.OrganizerDashboard
+                        }
+                    }
+                )
+            }
+
+            Screen.Archive -> {
+                ArchiveScreen(
+                    onNavigateBack = {
+                        currentScreen = Screen.MissionList
+                    }
                 )
             }
         }
